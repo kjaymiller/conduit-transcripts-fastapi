@@ -1,0 +1,4 @@
+<form method="post" action="/search">
+    <input id="query" type="text" name="query" placeholder="Search" {% if query is defined %}value="{{query}}" readonly {% endif %} required>
+    <button type="submit">Search</button>
+</form>

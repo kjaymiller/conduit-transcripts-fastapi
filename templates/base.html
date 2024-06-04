@@ -1,0 +1,27 @@
+{% set title = "Super Conductor - Conduit Transcriptions and Conductor-Style AI Productivity Coach" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="static/css/pico.min.css" />
+</head>
+<body class="container">
+    <section class="container">
+        {% block header %}
+    <header>
+        <h1>{{title}}</h1>
+    <nav class="grid">
+        <ul>
+            <li><a href="/">Home</a></li>
+        </ul>
+    </nav>
+</header>
+</section>
+{% endblock %}
+<section>
+{% block content %}{% endblock %}
+</section>
+</body>
+</html>

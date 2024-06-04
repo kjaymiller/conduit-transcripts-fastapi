@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% include 'search_form.html' %}
+<script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
+<div hx-post="/query_search" hx-target="#response" hx-trigger="load" hx-include="#query">
+    We're coming up with advice for <em>"{{query}}"</em>
+</div>
+<div id="response"><span aria-busy="true">The bot is loading...</span></div>
+
+{% endblock %}
