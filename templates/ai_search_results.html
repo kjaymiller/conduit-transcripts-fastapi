@@ -5,9 +5,12 @@
 <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
 
-<article id="sse-listener" hx-ext="sse" sse-connect="/ai_query_search" sse-swap="message">
+<article id="sse-listener" hx-ext="sse" sse-connect="/ai_query_search" sse-swap="message" hx-swap="beforeend">
        Replace Me! <span aria-busy="true"></span> We're coming up with advice for <em>"{{query}}"</em>
 </article>
 
+<article id="message" hx-trigger="load" hx-get="/ai_query_search">
+    does it work normally
+</article>
 
 {% endblock %}
