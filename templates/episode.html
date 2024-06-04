@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'search_form.html' %}
+<div>
+    <h3><a href="/episode/{{episode.id}}">{{episode.title}}</a> <a href="episode.url">🔗</a></h3>
+    <small>{{episode.date}}</small>
+    <p>{{episode.description}}</p>
+    
+    <h4>Transcript</h4>
+    <article>
+        <p>{{episode.content}}</p>
+        </article>
+</div>
+{% endblock %}

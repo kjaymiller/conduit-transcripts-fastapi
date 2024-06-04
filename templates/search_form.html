@@ -1,4 +1,7 @@
 <form method="post" action="/search">
-    <input id="query" type="text" name="query" placeholder="Search" {% if query is defined %}value="{{query}}" readonly {% endif %} required>
+    <input id="query" type="text" name="query" placeholder="Search" {% if query is defined %}value="{{query}}" {% endif %} required>
+    <div class="grid">
+    <button class="pico-background-amber-200" type="submit" formaction="/ai_search">Ask our 💫 AI Coach </button>
     <button type="submit">Search</button>
+    </div>
 </form>

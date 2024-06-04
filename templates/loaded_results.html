@@ -1,16 +1,13 @@
 <section>
-    <h2>Super Conductor Says:</h2>
-    <div>
-        <article id="response"></article>
-    </div>
-    <quote><small>Super Conductor is built off of llama3 and will likely make mistakes. You shouldn't trust everything you read on the internet.</small></quote>
-</section>
-<section>
-    <h2>Here are some quotes that talk on {{query}}:</h2>
+    <h2>Here are some episodes that talk on {{query}}:</h2>
     {% for result in results %}
     <article>
-        <h3>{{result[0].metadata.title}}</h3>
-        <p>{{result[0].page_content}}</p>
+        <h3><a href="/episode_by_title?title={{result|escape}}">{{result}}</a></h3>
+        {% for entry in results[result] %}
+        <article>
+            <p><em>{{entry[0].page_content | strip_text}}</em></p>
+        </article>
+        {% endfor %}
     </article>
     {% endfor %}
 </section>

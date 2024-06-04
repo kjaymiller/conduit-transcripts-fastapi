@@ -1,7 +1,7 @@
 from typing import Annotated, List
 
 from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
@@ -13,6 +13,7 @@ from langchain_community.chat_models import ChatOllama
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
+import app.db.pg.crud as pg
 from app.db.search import similarity_search
 
 app = FastAPI()
@@ -33,54 +34,80 @@ def bucket_results(results):
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
+def strip_text(text:str):
+    return text.lstrip(". ").lstrip("? ")
+
+templates.env.filters["strip_text"] = strip_text
+
 @app.get("/", response_class=HTMLResponse)
 def read_item(request: Request):
     return templates.TemplateResponse(request=request, name="index.html", context={"request": request})
 
-def ai_stream_response(query:str, results: List[str]):
-    print("testing")
-    llm = ChatOllama(model="llama3")
-    prompt = ChatPromptTemplate.from_template("""
-            Offer supportive advice for the question {query} with supporting quotes from 
-            "{docs}".
+@app.get("/episodes/", response_class=HTMLResponse)
+def all_episodes(request: Request): 
+    episodes = sorted(pg.all_episodes(), key=lambda x: int(x.title.split(":")[0]), reverse=True)
+    return templates.TemplateResponse("all_episodes.html", {"request": request, "episodes": episodes})
 
-            If there are no documents to quote, say "I don't have any information on that."
+@app.get("/episode_by_title", response_class=HTMLResponse)
+def episode_by_title(request: Request, title: str):
+    episode = pg.get_episode_by_title(title)
+    return templates.TemplateResponse("episode.html", {"request": request, "episode": episode})
 
-            Mention the quote you're pulling from                                                                     
-            Don't include quotes from other sources
-            make responses about 1000 characters
-    """)    
+@app.get("/episode/{episode_id}", response_class=HTMLResponse)
+def episode(request: Request, episode_id: int):
+    episode = pg.get_episode_by_id(episode_id)
+    return templates.TemplateResponse("episode.html", {"request": request, "episode": episode})
 
-    chain = prompt | llm | StrOutputParser()
-    topic = {"query": query, "docs": "/n".join(results)}
+@app.get("/ai_query_search", response_class=StreamingResponse)
+async def ai_query_search(query: Annotated[str, Form()]):
     
-    stream = chain.invoke(topic)
-    for i in stream:
-        print(i, end="", flush=True)
+    def ai_stream_response(query:str, results: List[str]):
+        llm = ChatOllama(model="llama3")
+        prompt = ChatPromptTemplate.from_template("""
+                Offer supportive advice for the question {query} with supporting quotes from 
+                "{docs}".
 
+                If there are no documents to quote, say "I don't have any information on that."
 
-@app.post("/query_search", response_class=HTMLResponse)
-def query_search(request:Request, query: Annotated[str, Form()]):
+                Mention the quote you're pulling from                                                                     
+                Don't include quotes from other sources
+                make responses about 1000 characters
+        """)    
+
+        chain = prompt | llm | StrOutputParser()
+        topic = {"query": query, "docs": "/n".join(results)}
+        
+        for content in chain.stream(topic):
+            yield content
+
+    _results = similarity_search(query)
+    results = bucket(_results, lambda x: x[0].metadata['title'])
+    clean_results = [x[0].page_content.lstrip(". ").lstrip("? ") for x in _results]
     
-    results = similarity_search(query)
-    clean_results = [x[0].page_content.lstrip(". ").lstrip("? ") for x in results]
-    ai_stream_response(query, clean_results)
+    return StreamingResponse(ai_stream_response(query, clean_results))
+
+
+@app.post("/ai_search", response_class=HTMLResponse)
+def ai_search(request: Request, query: Annotated[str, Form()]):
+
     return templates.TemplateResponse(
         request=request,
-        name="loaded_results.html",
+        name="ai_search_results.html",
         context={
-            "results": results,
             "query": query,
         }
     )
 
 @app.post("/search", response_class=HTMLResponse)
 def search(request: Request, query: Annotated[str, Form()]):
+    """Standard Similary Search"""
+    results = bucket(similarity_search(query), lambda x: x[0].metadata['title'])
 
     return templates.TemplateResponse(
         request=request,
         name="search_results.html",
         context={
             "query": query,
+            "results": results,
         }
     )
