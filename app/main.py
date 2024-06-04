@@ -1,3 +1,6 @@
+from time import sleep
+import asyncio
+import json
 from typing import Annotated, List
 
 from fastapi import FastAPI, Request, Form
@@ -58,8 +61,8 @@ def episode(request: Request, episode_id: int):
     episode = pg.get_episode_by_id(episode_id)
     return templates.TemplateResponse("episode.html", {"request": request, "episode": episode})
 
-@app.get("/ai_query_search", response_class=StreamingResponse)
-async def ai_query_search(query: Annotated[str, Form()]):
+@app.get("/ai_query_search")
+async def ai_query_search():
     
     def ai_stream_response(query:str, results: List[str]):
         llm = ChatOllama(model="llama3")
@@ -80,15 +83,20 @@ async def ai_query_search(query: Annotated[str, Form()]):
         for content in chain.stream(topic):
             yield content
 
-    _results = similarity_search(query)
-    results = bucket(_results, lambda x: x[0].metadata['title'])
-    clean_results = [x[0].page_content.lstrip(". ").lstrip("? ") for x in _results]
-    
-    return StreamingResponse(ai_stream_response(query, clean_results))
+    async def stream_test():
+        for i in range(10):
+            yield json.dumps({"data": f"Hello {i}"})
+            await asyncio.sleep(1)
 
+    # _results = similarity_search(query)
+    # results = bucket(_results, lambda x: x[0].metadata['title'])
+    # clean_results = [x[0].page_content.lstrip(". ").lstrip("? ") for x in _results]
+    
+    # return StreamingResponse(ai_stream_response(query, clean_results))
+    return StreamingResponse(stream_test(), media_type="text/event-stream")
 
 @app.post("/ai_search", response_class=HTMLResponse)
-def ai_search(request: Request, query: Annotated[str, Form()]):
+async def ai_search(request: Request, query: Annotated[str, Form()]):
 
     return templates.TemplateResponse(
         request=request,
