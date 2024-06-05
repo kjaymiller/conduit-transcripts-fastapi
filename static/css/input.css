@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+a {
+    @apply hover:font-bold;
+}
+
+p {
+    @apply my-4;
+}
+
+button {
+    @apply bg-gradient-to-br from-blue-400 to-pink-500 p-5 m-5 rounded-2xl text-xl font-black text-white;
+}
+
+nav > ul li {
+    @apply mx-5;
+}
+
+article {
+    @apply border my-3 p-4 rounded hover:shadow-lg
+}
+
+article.ai-solution {
+    @apply bg-gradient-to-br from-blue-100 to-pink-100 hover:shadow-none;
+}
+
+a.episode-title {
+    @apply text-2xl underline font-bold decoration-4 decoration-pink-500;
+}

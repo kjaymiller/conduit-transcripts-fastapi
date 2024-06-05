@@ -1,9 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <section>
-    <h2>Welcome to Super Conductor</h2>
-    <p>Super Conductor is a suite of tools for transcribing music and coaching conductors.</p>
+    <section class="text-xl">
+
+    <h2 class="py-4 my-4 text-4xl font-bold">Welcome to <span class="text-pink-600 font-light">Super Conductor 💫</span></h2>
+    
+    <p>Super Conductor is a site providing transcriptions for the <a href="https://relay.fm/conduit" class="underline decoration-pink-500 text-purple-500">Conduit Podcast</a> on Relay.fm.</p>
+    <p>Get started by adding searching for a productivity topic.</p>
     </section>
     {% include "search_form.html" %}
+{% endblock %}
+{% block footer %}
+
 {% endblock %}

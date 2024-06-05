@@ -4,9 +4,9 @@
 <div>
     {% for episode in episodes %}
     <article>
-        <h3><a href="/episode/{{episode.id}}">{{episode.title}}</a> <a href="episode.url">🔗</a></h3>
-        <small>{{episode.date}}</small>
-        <p>{{episode.description}}</p>
+        <h3 class="text-3xl"><a class="underline hover:decoration-4 hover:font-normal decoration-pink-500" href="/episode/{{episode.id}}">{{episode.title}}</a> <a class="underline decoration-blue-500" href="{{episode.url}}">🔗</a></h3>
+        <small><strong>Recorded: </strong>{{episode.date}}</small>
+        <p class="italic text-slate-500">{{episode.description}}</p>
     </article>
     {% endfor %}
 </div>

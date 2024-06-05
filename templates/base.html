@@ -1,30 +1,39 @@
-{% set title = "Super Conductor - Conduit Transcriptions and Conductor-Style AI Productivity Coach" %}
+{% set title = "Super Conductor" %}
+{% set subtitle = "Conduit Transcriptions and Conductor-Style AI Productivity Coach" %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
-    <link rel="stylesheet" href="/static/css/pico.min.css" />
-    <link rel="stylesheet" href="/static/css/pico.colors.min.css" />
-
+    <title>{{title}} - {{subtitle}}</title>
+    <link rel="stylesheet" href="/static/css/output.css" />
+    
 </head>
-<body class="container">
+<body class="container mx-auto my-2">
     <section class="container">
-        {% block header %}
+    {% block header %}
+    <div>
     <header>
-        <h1>{{title}}</h1>
-    <nav class="grid">
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/episodes">Episodes</a></li>
-        </ul>
-    </nav>
-</header>
-</section>
+        <section class="grid grid-cols-6">
+            <div class="col-span-1">
+                <img src="/static/images/Super-Conductor.png" class="rounded-xl" alt="Super Conductor Logo">
+            </div> 
+            <div class="col-span-2 place-content-end">
+                <h1 class="p-3 text-5xl font-extrabold">{{title}}</h1>
+                <h2 class="p-3 text-xl font-bold">{{subtitle}}</h2>
+            </div>
+        </section>
+        <nav class="my-3">
+            <ul class="flex">
+                <li><a class="hover:underline hover:font-bold text-purple-800" href="/">Home</a></li>
+                <li><a class="hover:underline hover:font-bold text-purple-800" href="/episodes">Episodes</a></li>
+            </ul>
+        </nav>
+    </header>
 {% endblock %}
-<section>
-{% block content %}{% endblock %}
+<section class="container mx-auto">
+    {% block content %}{% endblock %}
 </section>
 </body>
 </html>
+</section>

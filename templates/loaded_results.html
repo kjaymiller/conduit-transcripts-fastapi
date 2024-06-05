@@ -1,8 +1,8 @@
 <section>
-    <h2>Here are some episodes that talk on {{query}}:</h2>
+    <h2 class="text-3xl font-semibold m-3">Here are some episodes that speak on <em class="font-semibold underline decoration-pink-500">{{query}}</em></h2>
     {% for result in results %}
-    <article>
-        <h3><a href="/episode_by_title?title={{result|escape}}">{{result}}</a></h3>
+    <article class="border-none hover:shadow-none">
+        <h3><a class="episode-title" href="/episode_by_title?title={{result|escape}}">{{result}}</a></h3>
         {% for entry in results[result] %}
         <article>
             <p><em>{{entry[0].page_content | strip_text}}</em></p>

@@ -61,12 +61,14 @@ async def ai_query_search(query_id: str):
         if redis.hget(query_id, "status") == "not started":
             llm = ChatOllama(model="llama3")
             prompt = ChatPromptTemplate.from_template("""
-                    Offer supportive advice for the question {query} with supporting quotes from 
+                    Offer supportive advice for the question {query} with supporting quotes from Kathy and Jay who say 
                     "{docs}".
 
-                    Mention the quote you're pulling from                                                                     
+                    Mention the quote you're pulling from.
+                                                                                                                         
                     Don't include quotes from other sources
-                    make responses about 1000 characters
+                                                      
+                    Make responses about 1000 characters
             """)    
 
             chain = prompt | llm | StrOutputParser()

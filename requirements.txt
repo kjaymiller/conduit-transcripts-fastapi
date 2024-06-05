@@ -5,6 +5,7 @@ python-dotenv
 sqlmodel
 psycopg
 psycopg-binary
+pytailwindcss
 langchain
 langchain-community
 langchain-openai

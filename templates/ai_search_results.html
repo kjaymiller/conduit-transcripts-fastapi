@@ -12,7 +12,9 @@
         if (event.data.startsWith("Generation Complete: Response:")) {
             response = event.data.replace("Generation Complete: Response:", "");
             console.log(response);
-            document.getElementById("response").innerHTML = response;
+            var element = document.getElementById("response");
+            element.innerHTML = response;
+            element.classList.remove("blur-sm");
             evtSource.close(); 
             return
         }
