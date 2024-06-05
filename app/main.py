@@ -55,31 +55,39 @@ def episode(request: Request, episode_id: int):
 async def ai_query_search(query_id: str):
     
     def ai_stream_response(query_id:str):
+        
         job = redis.hgetall(query_id)
-        print(job)
+        if redis.hget(query_id, "status") == "not started":
+            llm = ChatOllama(model="llama3")
+            prompt = ChatPromptTemplate.from_template("""
+                    Offer supportive advice for the question {query} with supporting quotes from 
+                    "{docs}".
+
+                    Mention the quote you're pulling from                                                                     
+                    Don't include quotes from other sources
+                    make responses about 1000 characters
+            """)    
+
+            chain = prompt | llm | StrOutputParser()
+            topic = {"query": job["query"], "docs": job["docs"]}
+            
+            response = ""
+            for content in chain.stream(topic):
+                response += content 
+                yield f"data:{content} \n\n"
+            
+            redis.hset(query_id, "response", response)
+            redis.hset(query_id, "status", "completed")
+        
+        else:
+            yield f'data:{job["response"]}\n\n'
+
+        print(redis.hgetall(query_id))
         yield f'data:Terminate Connection\n\n'
 
 
-        # llm = ChatOllama(model="llama3")
-        # prompt = ChatPromptTemplate.from_template("""
-        #         Offer supportive advice for the question {query} with supporting quotes from 
-        #         "{docs}".
 
-        #         If there are no documents to quote, say "I don't have any information on that."
-
-        #         Mention the quote you're pulling from                                                                     
-        #         Don't include quotes from other sources
-        #         make responses about 1000 characters
-        # """)    
-
-        # chain = prompt | llm | StrOutputParser()
-        # topic = {"query": query, "docs": "/n".join(results)}
-        
-        # for content in chain.stream(topic):
-        #     yield content
-
-    # return StreamingResponse(ai_stream_response(query, clean_results))
-    return StreamingResponse(ai_stream_response, media_type="text/event-stream")
+    return StreamingResponse(ai_stream_response(query_id), media_type="text/event-stream")
 
 
 @app.post("/ai_search", response_class=HTMLResponse)
