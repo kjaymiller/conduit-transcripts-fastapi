@@ -2,15 +2,24 @@
 
 {% block content %}
 {% include 'search_form.html' %}
-<script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
 
-<article id="sse-listener" hx-ext="sse" sse-connect="/ai_query_search" sse-swap="message" hx-swap="beforeend">
-       Replace Me! <span aria-busy="true"></span> We're coming up with advice for <em>"{{query}}"</em>
-</article>
+<script>
+    const evtSource = new EventSource(
+        "/ai_query_search/{{query_id}}",
+    );
+    evtSource.onmessage = function(event) {
+        if (event.data === "Terminate Connection") {
+            evtSource.close();
+            return;
+        }
+        console.log(event.data);
+        document.getElementById("loaded_results").innerHTML += event.data;
+        
+    };
 
-<article id="message" hx-trigger="load" hx-get="/ai_query_search">
-    does it work normally
-</article>
+
+</script>
+
+{% include 'ai_loaded_results.html' %}
 
 {% endblock %}
