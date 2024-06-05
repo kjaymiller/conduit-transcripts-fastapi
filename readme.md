@@ -1,4 +1,15 @@
-This is a streamlit application that allows you to search and view transcripts from each episode of [Conduit](https://relay.fm/conduit)
+This is a FastAPI application that allows you to search and view transcripts from each episode of [Conduit](https://relay.fm/conduit).
+
+It also has an AI bot (locally powered by Llama3 via Ollama) that will take those results and generate a short summary for you.
+
+## Database Services
+
+- PostgreSQL - individual transcription and episode data
+- OpenSearch®️ - application search and logging data
+- Redis - AI Coach session management
+- Grafana - resource monitoring
+  
+All database services are powered by the Aiven Platform. [Sign up](https://go.aiven.io/jay-signup) for $400 off your first month and try the fastest and easiest way to setup your own Data and AI platform 
 
 ## Usage and License
 
