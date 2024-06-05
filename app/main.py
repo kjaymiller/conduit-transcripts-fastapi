@@ -1,4 +1,5 @@
 import uuid
+from markdown import markdown
 
 from typing import Annotated, List
 
@@ -76,16 +77,14 @@ async def ai_query_search(query_id: str):
                 response += content 
                 yield f"data:{content} \n\n"
             
-            redis.hset(query_id, "response", response)
+            redis.hset(query_id, "response", markdown(response).replace("\n", ""))
             redis.hset(query_id, "status", "completed")
         
-        else:
-            yield f'data:{job["response"]}\n\n'
+        print(response)
+        yield f'data: Generation Complete: Response: {redis.hget(query_id, "response")}\n\n'
 
         print(redis.hgetall(query_id))
-        yield f'data:Terminate Connection\n\n'
-
-
+        yield 'data:Terminate Connection\n\n'
 
     return StreamingResponse(ai_stream_response(query_id), media_type="text/event-stream")
 

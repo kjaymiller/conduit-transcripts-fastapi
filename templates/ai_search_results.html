@@ -8,15 +8,20 @@
         "/ai_query_search/{{query_id}}",
     );
     evtSource.onmessage = function(event) {
-        if (event.data === "Terminate Connection") {
-            evtSource.close();
-            return;
-        }
-        console.log(event.data);
-        document.getElementById("response").innerHTML += event.data;
-        
-    };
 
+        if (event.data.startsWith("Generation Complete: Response:")) {
+            response = event.data.replace("Generation Complete: Response:", "");
+            console.log(response);
+            document.getElementById("response").innerHTML = response;
+            evtSource.close(); 
+            return
+        }
+        
+        else {
+                console.log(event.data);
+                document.getElementById("response").innerHTML += event.data;
+            }
+    }
 
 </script>
 
