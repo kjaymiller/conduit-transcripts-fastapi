@@ -10,10 +10,10 @@
     
 </head>
 <body class="container mx-auto my-2">
-    <section class="container">
+    <section class="container flex flex-col h-screen justify-between">
     {% block header %}
-    <div>
-    <header>
+    <section>
+        <header>
         <section class="grid grid-cols-6">
             <div class="col-span-1">
                 <img src="/static/images/Super-Conductor.png" class="rounded-xl" alt="Super Conductor Logo">
@@ -29,11 +29,21 @@
                 <li><a class="hover:underline hover:font-bold text-purple-800" href="/episodes">Episodes</a></li>
             </ul>
         </nav>
-    </header>
+        </header>
+    </section>
 {% endblock %}
-<section class="container mx-auto">
+<section class="container mx-auto mb-auto">
     {% block content %}{% endblock %}
 </section>
+{% block footer %}
+<footer class="text-center">
+    <hr/>
+    <p>Super Conductor is an <a href="github.com/kjaymiller/conduit-transcripts-fastapi">open source project</a> by <a href="https://kjaymiller.com">Jay Miller</a></p>
+    <p>Transcription come from <a href="https://relay.fm/conduit">Conduit</a> Recorded by Jay Miller and Kathy Campbell</p>
+    <p>Initial Transcriptions Provided by PILIX</p>
+    <p>Database Solutions Provided by <a href="https://go.aiven.io/jay-signup" class="text-orange-500">Aiven - Get $400 for your first Month</a></p>
+</footer>
+{% endblock %}
 </body>
 </html>
 </section>

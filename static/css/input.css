@@ -29,3 +29,7 @@ article.ai-solution {
 a.episode-title {
     @apply text-2xl underline font-bold decoration-4 decoration-pink-500;
 }
+
+footer > p > a {
+    @apply underline font-semibold text-blue-400 decoration-pink-500;
+}
