@@ -15,7 +15,7 @@ services:
       - ES_PASSWORD=${OPENSEARCH_PASSWORD}
       - ES_TLS_SKIP_HOST_VERIFY=true
     command: [
-      "--es.server-urls=https://avnadmin:AVNS_mNhp8sh_knLTpMQPOhO@os-langchain-demo-langchain-workshop.h.aivencloud.com:23407",
+      "--es.server-urls=${OPENSEARCH_SERVER_URI}",
       "--es.tls.enabled=true"
     ]
   otel_collector:
