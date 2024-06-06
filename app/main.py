@@ -1,12 +1,19 @@
+import dotenv
 import uuid
 from markdown import markdown
 
-from typing import Annotated, List
+from typing import Annotated
 
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from opentelemetry import trace
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from pydantic import BaseModel
 
 
@@ -16,9 +23,11 @@ from langchain_community.chat_models import ChatOllama
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
-import app.db.pg.crud as pg
-from app.db.search import similarity_search
-from app.db.redis import redis_connection as redis
+import db.pg.crud as pg
+from db.search import similarity_search
+from db.redis import redis_connection as redis
+
+dotenv.load_dotenv()
 
 app = FastAPI()
 
@@ -127,3 +136,14 @@ def search(request: Request, query: Annotated[str, Form()]):
             "results": results,
         }
     )
+
+resource = Resource(attributes={
+    "service.name": "service"
+})
+
+traceProvider = TracerProvider(resource=resource)
+otlp_exporter = OTLPSpanExporter(endpoint="jaeger:4317", insecure=True)
+span_processor = BatchSpanProcessor(otlp_exporter)
+traceProvider.add_span_processor(span_processor)
+trace.set_tracer_provider(traceProvider)
+FastAPIInstrumentor.instrument_app(app)

@@ -11,3 +11,7 @@ langchain-community
 langchain-openai
 sentence-transformers
 opensearch-py
+markdown
+opentelemetry-exporter-otlp
+opentelemetry-instrumentation-fastapi
+redis
