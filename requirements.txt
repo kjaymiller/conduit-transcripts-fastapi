@@ -15,6 +15,7 @@ playwright
 psycopg
 psycopg-binary
 pytailwindcss
+pytest
 python-dotenv
 redis
 sentence-transformers
