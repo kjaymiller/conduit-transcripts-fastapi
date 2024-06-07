@@ -1,7 +1,16 @@
 <form method="post" action="/search">
     <input class="block w-full rounded-xl" id="query" type="text" name="query" placeholder="Ask about checking email or saying no or some other productivity topic!" {% if query is defined %}value="{{query}}" {% endif %} required>
-    <div class="grid grid-cols-2">
-    <button class="bg-gradient-to-br from-blue-400 to-pink-500 p-5 m-5 rounded-2xl text-xl font-black text-white" type="submit" formaction="/ai_search">Ask our 💫 AI Coach </button>
-    <button class="bg-gradient-to-br from-blue-300 to-blue-500 p-5 m-5 rounded-2xl" type="submit">Search</button>
+    <div class="flex">
+        {% if request.cookies.enable_ai is defined and request.cookies.enable_ai == "True" %}
+        <button class="bg-gradient-to-br from-blue-400 to-pink-500 p-5 m-5 rounded-2xl text-xl font-black text-white" type="submit" formaction="/ai_search">Ask our 💫 AI Coach </button>
+        {% endif %}
+        <button class="grow bg-gradient-to-br from-blue-300 to-blue-500 p-5 m-5 rounded-2xl" type="submit">Search</button>
+        <small class="self-center">
+            {% if request.cookies.enable_ai == "True" %}
+                <a href="/disable_ai">Disable AI</a>
+            {% else %}
+                <a href="/enable_ai">Enable AI</a>
+            {% endif %}
+        </small>
     </div>
 </form>

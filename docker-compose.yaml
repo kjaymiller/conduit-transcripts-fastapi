@@ -15,7 +15,7 @@ services:
       - ES_PASSWORD=${OPENSEARCH_PASSWORD}
       - ES_TLS_SKIP_HOST_VERIFY=true
     command: [
-      "--es.server-urls=${OPENSEARCH_SERVER_URI}",
+      "--es.server-urls=${OPENSEARCH_SERVICE_URI}",
       "--es.tls.enabled=true"
     ]
   otel_collector:
@@ -27,6 +27,11 @@ services:
       - "14278:14278"
     depends_on:
       - jaeger
+  llama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+
   app:
     build: .
     command: python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
@@ -34,4 +39,7 @@ services:
       - .:/app
     ports:
       - "8000:8000"
-    
+    depends_on:
+      - jaeger
+      - otel_collector
+      - llama

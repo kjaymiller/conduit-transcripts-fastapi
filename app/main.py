@@ -1,11 +1,14 @@
+import os
+import logging
 import dotenv
+from contextlib import asynccontextmanager
 import uuid
 from markdown import markdown
 
 from typing import Annotated
 
 from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi.responses import HTMLResponse, StreamingResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from opentelemetry import trace
@@ -18,6 +21,7 @@ from pydantic import BaseModel
 
 
 from more_itertools import bucket
+from ollama import Client as OllamaClient
 
 from langchain_community.chat_models import ChatOllama
 from langchain_core.output_parsers import StrOutputParser
@@ -29,7 +33,18 @@ from db.redis import redis_connection as redis
 
 dotenv.load_dotenv()
 
-app = FastAPI()
+MODEL_NAME = os.getenv("MODEL_NAME", "llama3")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Context manager to ensure that the Llama3 model is downloaded before the app starts"""
+    ollama = OllamaClient(host=os.getenv("OLLAMA_HOST", "http://localhost:11434"))
+    if f"{MODEL_NAME}:latest" not in ollama.list()['models']:
+        logging.info(f"Downloading {MODEL_NAME} model")
+        ollama.pull(MODEL_NAME)
+    yield
+
+app = FastAPI(lifespan=lifespan)
 
 class APIRequest(BaseModel):
     query: str
@@ -43,8 +58,34 @@ def strip_text(text:str):
 templates.env.filters["strip_text"] = strip_text
 
 @app.get("/", response_class=HTMLResponse)
-def read_item(request: Request):
+def home(request: Request):
     return templates.TemplateResponse(request=request, name="index.html", context={"request": request})
+
+
+@app.get("/enable_ai", response_class=RedirectResponse)
+async def enable_ai(request: Request):
+    response = RedirectResponse(
+        url="/",
+        status_code=302,
+    )
+    response.set_cookie(key="enable_ai", value=True)
+    return response
+
+    return response
+
+@app.get("/disable_ai", response_class=RedirectResponse)
+async def disable_ai(request: Request):
+
+    response = RedirectResponse(
+        url="/",
+        status_code=302,
+    )
+    response.set_cookie(key="enable_ai", value=False)
+    return response
+
+@app.get("/old", response_class=HTMLResponse)
+def old_home(request: Request):
+    return templates.TemplateResponse(request=request, name="index.html", context={"request": request, "no_ai": True})
 
 @app.get("/episodes/", response_class=HTMLResponse)
 def all_episodes(request: Request): 
@@ -54,12 +95,14 @@ def all_episodes(request: Request):
 @app.get("/episode_by_title", response_class=HTMLResponse)
 def episode_by_title(request: Request, title: str):
     episode = pg.get_episode_by_title(title)
-    return templates.TemplateResponse("episode.html", {"request": request, "episode": episode})
+    episode_content = markdown(episode.content)
+    return templates.TemplateResponse("episode.html", {"request": request, "episode": episode , "episode_content": episode_content})
 
 @app.get("/episode/{episode_id}", response_class=HTMLResponse)
 def episode(request: Request, episode_id: int):
     episode = pg.get_episode_by_id(episode_id)
-    return templates.TemplateResponse("episode.html", {"request": request, "episode": episode})
+    episode_content = markdown(episode.content)
+    return templates.TemplateResponse("episode.html", {"request": request, "episode": episode, "episode_content": episode_content})
 
 @app.get("/ai_query_search/{query_id}")
 async def ai_query_search(query_id: str):
@@ -68,17 +111,16 @@ async def ai_query_search(query_id: str):
         
         job = redis.hgetall(query_id)
         if redis.hget(query_id, "status") == "not started":
-            llm = ChatOllama(model="llama3")
+            llm = ChatOllama(model=MODEL_NAME,base_url=os.getenv("OLLAMA_HOST", "http://localhost:11434"))
             prompt = ChatPromptTemplate.from_template("""
                     Offer supportive advice for the question {query} with supporting quotes from Kathy and Jay who say 
-                    "{docs}".
+                    
+                    Quotes: "{docs}".
 
-                    Mention the quote you're pulling from.
-                                                                                                                         
-                    Don't include quotes from other sources
-                                                      
+                    Only use quotes mentioned.
+                    If no quotes  - Say so and stop generating a response.                                                                                                                                                           
                     Make responses about 1000 characters
-            """)    
+            """)
 
             chain = prompt | llm | StrOutputParser()
             topic = {"query": job["query"], "docs": job["docs"]}
@@ -138,12 +180,13 @@ def search(request: Request, query: Annotated[str, Form()]):
     )
 
 resource = Resource(attributes={
-    "service.name": "service"
+    "service.name": "conduit-ai-transcription"
 })
 
-traceProvider = TracerProvider(resource=resource)
-otlp_exporter = OTLPSpanExporter(endpoint="jaeger:4317", insecure=True)
-span_processor = BatchSpanProcessor(otlp_exporter)
-traceProvider.add_span_processor(span_processor)
-trace.set_tracer_provider(traceProvider)
-FastAPIInstrumentor.instrument_app(app)
+if os.getenv("telemetry", False):
+    traceProvider = TracerProvider(resource=resource)
+    otlp_exporter = OTLPSpanExporter(endpoint="jaeger:4317", insecure=True)
+    span_processor = BatchSpanProcessor(otlp_exporter)
+    traceProvider.add_span_processor(span_processor)
+    trace.set_tracer_provider(traceProvider)
+    FastAPIInstrumentor.instrument_app(app)

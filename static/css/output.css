@@ -754,6 +754,22 @@ select {
   }
 }
 
+.absolute {
+  position: absolute;
+}
+
+.right-0 {
+  right: 0px;
+}
+
+.right-5 {
+  right: 1.25rem;
+}
+
+.z-50 {
+  z-index: 50;
+}
+
 .col-span-1 {
   grid-column: span 1 / span 1;
 }
@@ -762,12 +778,25 @@ select {
   grid-column: span 2 / span 2;
 }
 
+.col-span-6 {
+  grid-column: span 6 / span 6;
+}
+
 .m-3 {
   margin: 0.75rem;
 }
 
+.m-4 {
+  margin: 1rem;
+}
+
 .m-5 {
   margin: 1.25rem;
+}
+
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 .mx-auto {
@@ -806,12 +835,36 @@ select {
   display: grid;
 }
 
+.hidden {
+  display: none;
+}
+
 .h-screen {
   height: 100vh;
 }
 
+.w-8 {
+  width: 2rem;
+}
+
 .w-full {
   width: 100%;
+}
+
+.grow {
+  flex-grow: 1;
+}
+
+.grid-cols-8 {
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-cols-none {
+  grid-template-columns: none;
 }
 
 .grid-cols-2 {
@@ -826,12 +879,16 @@ select {
   flex-direction: column;
 }
 
-.place-content-end {
-  place-content: end;
-}
-
 .justify-between {
   justify-content: space-between;
+}
+
+.self-end {
+  align-self: flex-end;
+}
+
+.self-center {
+  align-self: center;
 }
 
 .rounded {
@@ -840,6 +897,10 @@ select {
 
 .rounded-2xl {
   border-radius: 1rem;
+}
+
+.rounded-3xl {
+  border-radius: 1.5rem;
 }
 
 .rounded-xl {
@@ -852,6 +913,11 @@ select {
 
 .border-none {
   border-style: none;
+}
+
+.bg-slate-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(148 163 184 / var(--tw-bg-opacity));
 }
 
 .bg-gradient-to-br {
@@ -870,8 +936,28 @@ select {
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
+.from-green-500 {
+  --tw-gradient-from: #22c55e var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(34 197 94 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.from-slate-50 {
+  --tw-gradient-from: #f8fafc var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(248 250 252 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
 .to-blue-500 {
   --tw-gradient-to: #3b82f6 var(--tw-gradient-to-position);
+}
+
+.to-cyan-800 {
+  --tw-gradient-to: #155e75 var(--tw-gradient-to-position);
+}
+
+.to-pink-100 {
+  --tw-gradient-to: #fce7f3 var(--tw-gradient-to-position);
 }
 
 .to-pink-500 {
@@ -890,6 +976,11 @@ select {
   padding: 1.25rem;
 }
 
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -901,6 +992,11 @@ select {
 
 .text-right {
   text-align: right;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
 .text-3xl {
@@ -947,9 +1043,9 @@ select {
   font-style: italic;
 }
 
-.text-pink-500 {
+.text-orange-500 {
   --tw-text-opacity: 1;
-  color: rgb(236 72 153 / var(--tw-text-opacity));
+  color: rgb(249 115 22 / var(--tw-text-opacity));
 }
 
 .text-pink-600 {
@@ -972,14 +1068,14 @@ select {
   color: rgb(100 116 139 / var(--tw-text-opacity));
 }
 
+.text-slate-800 {
+  --tw-text-opacity: 1;
+  color: rgb(30 41 59 / var(--tw-text-opacity));
+}
+
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.text-orange-500 {
-  --tw-text-opacity: 1;
-  color: rgb(249 115 22 / var(--tw-text-opacity));
 }
 
 .underline {
@@ -1008,7 +1104,7 @@ p {
   margin-bottom: 1rem;
 }
 
-button {
+form > button {
   margin: 1.25rem;
   border-radius: 1rem;
   background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
@@ -1057,6 +1153,20 @@ article.ai-solution:hover {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+section#ads {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  section#ads {
+    display: block;
+  }
+}
+
+section#ads > a:hover {
+  font-weight: 400;
+}
+
 a.episode-title {
   font-size: 1.5rem;
   line-height: 2rem;
@@ -1072,6 +1182,11 @@ footer > p > a {
   color: rgb(96 165 250 / var(--tw-text-opacity));
   text-decoration-line: underline;
   text-decoration-color: #ec4899;
+}
+
+.hover\:bg-slate-500:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(100 116 139 / var(--tw-bg-opacity));
 }
 
 .hover\:font-bold:hover {
@@ -1094,4 +1209,14 @@ footer > p > a {
   --tw-shadow: 0 0 #0000;
   --tw-shadow-colored: 0 0 #0000;
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+@media (min-width: 1280px) {
+  .xl\:grid {
+    display: grid;
+  }
+
+  .xl\:grid-cols-none {
+    grid-template-columns: none;
+  }
 }

@@ -13,14 +13,23 @@
     <section class="container flex flex-col h-screen justify-between">
     {% block header %}
     <section>
+    {% if request.cookies.enable_ai is not defined %}
+        <div id="banner" class="z-50 m-4 p-4 h-128 bg-gradient-to-br from-slate-50 to-pink-100 right-0 absolute rounded ">
+            <button class="absolute right-5 w-8 rounded-3xl bg-slate-400 hover:bg-slate-500 text-slate-800" onclick="hideBanner()">x</button>        
+            <div class="m-3 p-4">
+            <p class="font-light"> Do you want to try out our new AI feature?</p>
+            <a class="p-3 rounded bg-gradient-to-br from-green-500 font-semibold to-cyan-800 text-white" href="/enable_ai">Let's Do It!</a>
+            </div>
+        </div>
+    {% endif %}
         <header>
-        <section class="grid grid-cols-6">
+        <section class="grid grid-cols-8">
             <div class="col-span-1">
-                <img src="/static/images/Super-Conductor.png" class="rounded-xl" alt="Super Conductor Logo">
+                <img src="/static/images/conduit_artwork.jpg" class="rounded-xl" alt="Super Conductor Logo">
             </div> 
-            <div class="col-span-2 place-content-end">
+            <div class="col-span-6 flex self-end">
                 <h1 class="p-3 text-5xl font-extrabold">{{title}}</h1>
-                <h2 class="p-3 text-xl font-bold">{{subtitle}}</h2>
+                <h2 class="p-3 text-xl font-bold self-end">{{subtitle}}</h2>
             </div>
         </section>
         <nav class="my-3">
@@ -33,7 +42,31 @@
     </section>
 {% endblock %}
 <section class="container mx-auto mb-auto">
-    {% block content %}{% endblock %}
+    <section class="xl:grid grid-cols-8">
+    <section class="col-span-6">
+        {% block content %}{% endblock %}
+    </section>
+    <section id="ads" class="grid grid-cols-6 xl:grid-cols-none col-span-2 px-4 mx-4">
+        <h2 class="text-2xl">This Project Brought to By:</h2>
+        <a class="hover:font-normal" href="https://go.aiven.io/jay-signup"><article>
+            <img src="/static/images/crabby-RGB.svg" alt="Aiven Logo"></svg>
+            <h2 class="text-xl">Aiven</h2>
+            <p>Get $400 for your first month of Aiven services</p>
+            <p class="text-orange-500">Sign Up Now</p>
+
+        </article>
+        </a>
+        <a class="hover:font-normal" href="https://www.relay.fm/conduit/join">
+        <article>
+            <img src="/static/images/Super-Conductor.png" alt="Super Conductor Logo"></svg>
+            <h2 class="text-xl">Super Conductor</h2>
+            <p>Support Conduit for Pre/Post Show and Coworking Sessions</p>
+            <p class="text-purple-800">Sign Up Now</p>
+
+        </article>
+    </a>
+    </section>
+</section>
 </section>
 {% block footer %}
 <footer class="text-center">
@@ -42,7 +75,14 @@
     <p>Transcription come from <a href="https://relay.fm/conduit">Conduit</a> Recorded by Jay Miller and Kathy Campbell</p>
     <p>Initial Transcriptions Provided by PILIX</p>
     <p>Database Solutions Provided by <a href="https://go.aiven.io/jay-signup" class="text-orange-500">Aiven - Get $400 for your first Month</a></p>
+    
 </footer>
+<script>
+    function hideBanner() {
+        document.getElementById("banner").style.display = "none";
+        document.cookie = "enable_ai=False";
+    }
+</script>
 {% endblock %}
 </body>
 </html>

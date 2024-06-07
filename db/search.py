@@ -1,5 +1,5 @@
 import os
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import OpenSearchVectorSearch        
 from dotenv import load_dotenv
 
@@ -23,4 +23,5 @@ def similarity_search(query: str) -> dict:
         text_field="content",
         metadata_field="*",
         k=6,
+        score_threshold=0.5,
     )
