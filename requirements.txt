@@ -16,6 +16,7 @@ psycopg
 psycopg-binary
 pytailwindcss
 pytest
+pytest-playwright
 python-dotenv
 redis
 sentence-transformers
