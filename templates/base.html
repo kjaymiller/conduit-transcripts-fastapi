@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="/static/css/output.css" />
     
 </head>
-<body class="container mx-auto my-2">
-    <section class="container flex flex-col h-screen justify-between">
+<body class="container lg:mx-auto m-4 p-4">
+    <section class="container lg:mx-auto flex-col h-screen justify-between">
     {% block header %}
     <section>
     {% if request.cookies.enable_ai is not defined %}
@@ -23,11 +23,11 @@
         </div>
     {% endif %}
         <header>
-        <section class="grid grid-cols-8">
-            <div class="col-span-1">
+        <section class="grid grid-cols-8 p-4">
+            <div class="col-span-full lg:col-span-1">
                 <img src="/static/images/conduit_artwork.jpg" class="rounded-xl" alt="Super Conductor Logo">
             </div> 
-            <div class="col-span-6 flex self-end">
+            <div class="col-span-4 md:flex self-end hidden xl:visible ">
                 <h1 class="p-3 text-5xl font-extrabold">{{title}}</h1>
                 <h2 class="p-3 text-xl font-bold self-end">{{subtitle}}</h2>
             </div>
@@ -41,7 +41,7 @@
         </header>
     </section>
 {% endblock %}
-<section class="container mx-auto mb-auto">
+<section class="">
     <section class="xl:grid grid-cols-8">
     <section class="col-span-6">
         {% block content %}{% endblock %}
