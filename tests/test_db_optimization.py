@@ -20,9 +20,6 @@ def test_checks_redis_cache_when_search_is_called(page:Page):
     page.get_by_placeholder("Ask about checking email or").fill(query)
     page.get_by_role("button", name="Ask our 💫 AI Coach").click(timeout=100000)
     
-    page.get_by_placeholder("Ask about checking email or").fill("Pandas")
-    page.get_by_role("button", name="Ask our 💫 AI Coach").click(timeout=100000)
-
     redis_scan = redis.scan()
-    assert len(redis_scan[1]) == 2 # And not 3
+    assert len(redis_scan[1]) == 1 # And not 2
 

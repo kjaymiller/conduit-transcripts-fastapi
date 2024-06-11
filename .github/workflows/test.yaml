@@ -16,7 +16,9 @@ jobs:
       - name : Run accessibility tests
         run: |
           python -m pytest tests --tracing=retain-on-failure
-      - uses: actions/upload-artifact@v3
+      - name: load artifacts
+        if: '!cancelled()'
+        uses: actions/upload-artifact@v3
         with:
           name: playwright-results
           path: test-results/
