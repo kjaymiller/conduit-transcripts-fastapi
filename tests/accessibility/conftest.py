@@ -8,19 +8,6 @@ report_time = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
 
 axe = Axe()
 
-# Create a directory to store accessibility reports
-accessibility_dir = pathlib.Path("test-results/accessibility_reports")
-accessibility_dir.mkdir(exist_ok=True, parents=True)
-_accessibility_reports = pathlib.Path(f"{report_time}_accessibility_page_results")
-accessibility_reports = (accessibility_dir / _accessibility_reports)
-accessibility_reports.mkdir()
-
-# Create a file to store accessibility snapshots
-_accessibility_snapshots = pathlib.Path(f"{report_time}_accessibility_page_snapshot.json")
-accessibility_snapshots = accessibility_dir/_accessibility_snapshots
-accessibility_snapshots.touch(exist_ok=True)
-
-
 def pytest_addoption(parser):
     parser.addoption(
         "--a11y-count", action="store", default=0, help="Number of accessibility violations to allow"
@@ -30,7 +17,18 @@ def pytest_addoption(parser):
 @pytest.fixture(scope="function", autouse=True)
 def run_a11y_test(request, pytestconfig, page: Page):
     """Run accessibility tests on the last page and store results in a file"""
-    
+    # Create a directory to store accessibility reports
+    accessibility_dir = pathlib.Path("test-results/accessibility_reports")
+    accessibility_dir.mkdir(exist_ok=True, parents=True)
+    _accessibility_reports = pathlib.Path(f"{report_time}_accessibility_page_results")
+    accessibility_reports = accessibility_dir / _accessibility_reports
+    accessibility_reports.mkdir()
+
+    # Create a file to store accessibility snapshots
+    _accessibility_snapshots = pathlib.Path(f"{report_time}_accessibility_page_snapshot.json")
+    accessibility_snapshots = accessibility_dir/_accessibility_snapshots
+    accessibility_snapshots.touch(exist_ok=True)
+
     axe_results = axe.run(page)
     report_path = accessibility_reports / pathlib.Path(f"{request.node.name}.txt")
     report_path.write_text(axe_results.generate_report())
