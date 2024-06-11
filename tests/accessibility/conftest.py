@@ -10,7 +10,7 @@ axe = Axe()
 
 # Create a directory to store accessibility reports
 accessibility_dir = pathlib.Path("test-results/accessibility_reports")
-accessibility_dir.mkdir(exist_ok=True)
+accessibility_dir.mkdir(exist_ok=True, parents=True)
 _accessibility_reports = pathlib.Path(f"{report_time}_accessibility_page_results")
 accessibility_reports = (accessibility_dir / _accessibility_reports)
 accessibility_reports.mkdir()
