@@ -1,9 +1,7 @@
-import aiven.client
 import pytest
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 import dotenv
 from db.redis import redis_connection as redis
-from redis.commands.search.query import Query
 
 import uuid
 
