@@ -22,7 +22,7 @@ def run_a11y_test(request, pytestconfig, page: Page):
     accessibility_dir.mkdir(exist_ok=True, parents=True)
     _accessibility_reports = pathlib.Path(f"{report_time}_accessibility_page_results")
     accessibility_reports = accessibility_dir / _accessibility_reports
-    accessibility_reports.mkdir()
+    accessibility_reports.mkdir(exist_ok=True, parents=True)
 
     # Create a file to store accessibility snapshots
     _accessibility_snapshots = pathlib.Path(f"{report_time}_accessibility_page_snapshot.json")

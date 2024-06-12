@@ -1,5 +1,6 @@
 arrow
 axe-playwright-python
+ephemeral-port-reserve
 fastapi
 langchain
 langchain-community

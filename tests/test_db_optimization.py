@@ -7,10 +7,10 @@ import uuid
 
 dotenv.load_dotenv()
 
-def test_checks_redis_cache_when_search_is_called(page:Page):
+def test_checks_redis_cache_when_search_is_called(page:Page, live_server_url: str):
     """Checks if when an AI Search is called twice, only one redis cache is created"""
     redis.flushall()
-    page.goto("http://localhost:8000/enable_ai")
+    page.goto(f"{live_server_url}/enable_ai")
 
     query = f"{uuid.uuid4()} - How do I check to see if I'm doing the things on my list"
 

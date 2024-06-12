@@ -24,13 +24,11 @@ jobs:
           INDEX_NAME: ${{secrets.INDEX_NAME}}
           OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED: true
           OTEL_RESOURCE_ATTRIBUTES: "service.name=langchain-workshop"
-
-
         run: |
           python -m pytest tests --tracing=retain-on-failure
       - name: load artifacts
         if: '!cancelled()'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: playwright-results
           path: test-results/
