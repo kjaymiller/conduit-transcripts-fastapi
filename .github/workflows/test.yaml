@@ -20,7 +20,7 @@ jobs:
       - name: Start serving
         run: |
             # Run the background, there is no way to daemonise at the moment
-            ollama install llama3
+            ollama pull llama3
             
             # A short pause is required before the HTTP port is opened
             ollama serve &
