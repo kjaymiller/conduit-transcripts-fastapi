@@ -56,7 +56,7 @@ def test_web_get_accessibility(request, pytestconfig, page: Page, route: str, li
     
     if axe_results.violations_count > pytestconfig.getoption("--a11y-count"):
         # fail the test if the number of violations is greater than the allowed count
-        pytest.fail(f"Accessibility violations found: {axe_results.violations_count}")
+        assert False, f"Accessibility violations found: {axe_results.violations_count}"
     
     pytest.pass_test(f"Accessibility violations found: {axe_results.violations_count}")
 
