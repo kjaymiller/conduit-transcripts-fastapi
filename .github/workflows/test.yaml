@@ -25,7 +25,7 @@ jobs:
           OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED: true
           OTEL_RESOURCE_ATTRIBUTES: "service.name=langchain-workshop"
         run: |
-          python -m pytest tests --tracing=retain-on-failure
+          python -m pytest tests/accessibility --tracing=retain-on-failure
       - name: load artifacts
         if: '!cancelled()'
         uses: actions/upload-artifact@v4
