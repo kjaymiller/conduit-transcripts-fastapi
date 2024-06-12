@@ -7,6 +7,7 @@ import uuid
 
 dotenv.load_dotenv()
 
+
 def test_checks_redis_cache_when_search_is_called(page:Page, live_server_url: str):
     """Checks if when an AI Search is called twice, only one redis cache is created"""
     redis.flushall()

@@ -1,6 +1,5 @@
 import pytest
 from playwright.sync_api import Page, expect
-from playwright.sync_api import Playwright
 
 
 def test_episode_by_title(page:Page, browser_context_args: dict[str, any], live_server_url) -> None:
