@@ -6,7 +6,7 @@ It also has an AI bot (locally powered by Llama3 via Ollama) that will take thos
 
 - PostgreSQL - individual transcription and episode data
 - OpenSearch®️ - application search and logging data
-- Redis - AI Coach session management
+- [Dragonfly](https://dragonflydb.io) - AI Coach session management
 - Grafana - resource monitoring
   
 All database services are powered by the Aiven Platform. [Sign up](https://go.aiven.io/jay-signup) for $400 off your first month and try the fastest and easiest way to setup your own Data and AI platform 
